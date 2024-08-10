@@ -40,6 +40,7 @@
 </style>
 
 <body>
+    <img height="100px" src="images/1.jfif" alt="">
     <h1>
         猜數字挑戰賽
     </h1>
@@ -53,16 +54,35 @@
     </div>
     <button id="restart">重新開始</button>
     <h3 id="guess_count"></h3>
+    <div style="background-color: aqua; color: black;">遊戲紀錄</div>
+    <p id="records"></p>
 </body>
 
 
 
 <script>
+    function showRecards() {
+        recordsEl.innerHTML = ""
+        for (let i = 0; i < records.length; i++) {
+            recordsEl.innerHTML += `
+            <hr>
+            <div>
+                時間:${records[i][0]}<br>
+                遊戲結果:${records[i][1]}<br>
+                遊戲次數:${records[i][2]}<br>
+            </div>
+            `
+        }
+    }
+
+
+
+
     function answer() {
         if (count == maxCount) {
-            resultEl.innerHTML = "失敗遊戲結束"
             return;
         }
+
         let number = numberEl.value
         if (number == "") {
             resultEl.innerHTML = "輸入不能為空";
@@ -77,11 +97,22 @@
         count++
 
         if (number == computer) {
-            resultEl.innerHTML = "猜對了";
+            resultEl.innerHTML = `猜對了<br>答案就是:${computer}`;
+            resultEl.Disabled = false
+
+            records.push([new Date().toLocaleString(), "猜對了", count])
+            showRecards();
         } else {
             guessCountEl.innerHTML = `猜錯${count}次`
             if (count == maxCount) {
                 resultEl.innerHTML = `遊戲結束<br>答案為:${computer}`
+                resultEl.innerHTML = `失敗遊戲結束<br>答案為:${computer}`
+                resultEl.Disabled = false
+                records.push([new Date().toLocaleString(), "猜錯了", count])
+                showRecards();
+                return;
+
+                resultEl.Disabled = false
             }
             if (number > computer) {
                 resultEl.innerHTML = "猜低一點";
@@ -97,18 +128,57 @@
     const resultEl = document.querySelector('#result');
     const guessCountEl = document.querySelector('#guess_count')
     const restartBtnEl = document.querySelector('#restart')
+    const recordsEl = document.querySelector('#records')
+
+    resultEl.Disabled = true
 
     restartBtnEl.addEventListener("click", () => {
         count = 0;
         resultEl.innerHTML = ""
         guessCountEl.innerHTML = ""
         numberEl.value = ""
+        computer = getRandomInt(1, 50)
+
     });
     const maxCount = 5
     let count = 0
 
-    console.log(numberEl, answerBtnEl);
-    let computer = 50;
+    console.log(numberEl, answerBtnEl, recordsEl);
+
+
+
+
+    let records = [];
+    // records.push(['2024/8/10 16:00:00', '答對了', '3次']);
+    // records.push(['2024/8/10 12:00:00', '答對了', '3次']);
+    // records.push(['2024/8/10 13:00:00', '答對了', '3次']);
+
+    // console.log(records)
+    // console.log(records.length)
+
+    // for (let i = 0; i < records.length; i++) {
+    //     console.log(records[i][0])
+    // }
+    // console.log(new Date().toLocaleString())
+
+
+
+
+
+
+    let computer = getRandomInt(1, 50);
+    let x = 6.8
+    console.log(x, Math.floor(x), Math.ceil(x))
+    console.log(Math.floor(Math.random() * 10) + 1)
+
+
+    for (let i = 0; i < 10; i++) {
+        console.log(getRandomInt(0, 3))
+    }
+
+    function getRandomInt(stat, end) {
+        return Math.floor(Math.random() * (end - stat + 1)) + stat;
+    }
 </script>
 
 </html>
